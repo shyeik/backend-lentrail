@@ -50,13 +50,9 @@ export const loginUser = async (username: string, password: string) => {
     username: cleanUsername,
   });
 
-  console.log("FOUND USER:", user);
-
   if (!user) {
     throw new Error("Invalid credentials");
   }
-
-  console.log("HASH FROM DB:", user.password);
 
   const isMatch = await bcrypt.compare(cleanPassword, user.password);
 
