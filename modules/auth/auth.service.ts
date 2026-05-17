@@ -39,18 +39,12 @@ export const registerUser = async (username: string, password: string) => {
 
 // 🔥 PUT DEBUG VERSION HERE
 export const loginUser = async (username: string, password: string) => {
-  console.log("RAW USERNAME:", username);
-  console.log("RAW PASSWORD:", password);
-
   if (!username || !password) {
     throw new Error("Username and password are required");
   }
 
   const cleanUsername = username.trim();
   const cleanPassword = password.trim();
-
-  console.log("CLEAN USERNAME:", cleanUsername);
-  console.log("CLEAN PASSWORD:", cleanPassword);
 
   const user = await User.findOne({
     username: cleanUsername,
@@ -65,12 +59,6 @@ export const loginUser = async (username: string, password: string) => {
   console.log("HASH FROM DB:", user.password);
 
   const isMatch = await bcrypt.compare(cleanPassword, user.password);
-
-  console.log("PASSWORD MATCH:", isMatch);
-
-  const manualTest = await bcrypt.compare("admin12345", user.password);
-
-  console.log("MANUAL TEST:", manualTest);
 
   if (!isMatch) {
     throw new Error("Invalid credentials");
