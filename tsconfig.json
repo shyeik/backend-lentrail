@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "commonjs",
-    "rootDir": "./",
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "module": "Node16",
+    "rootDir": ".",
+    "outDir": "dist",
     "strict": true,
-    "types": ["node"],
-    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node16",
+    "resolveJsonModule": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
