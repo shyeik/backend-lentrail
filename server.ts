@@ -3,6 +3,7 @@ dotenv.config();
 
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 
 import authRoutes from "./modules/routes/auth.routes";
 import clientRoutes from "./modules/routes/client.routes";
@@ -16,9 +17,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const CLIENT_ORIGIN = process.env.FRONTEND_URL || "http://localhost:5173";
 
-connectDB().catch((err) => {
-  console.error("MongoDB Error:", err);
-});
+// Connect MongoDB
+connectDB()
+  .then(() => {
+    console.log("✅ MongoDB Connected Successfully");
+    console.log("📦 Database:", mongoose.connection.name);
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Failed");
+    console.error(err);
+  });
 
 app.use(
   cors({
@@ -33,6 +41,10 @@ app.get("/", (_req: Request, res: Response) => {
   res.json({
     success: true,
     message: "Lentrail backend running 🚀",
+    mongodb:
+      mongoose.connection.readyState === 1
+        ? "✅ Connected"
+        : "❌ Not Connected",
   });
 });
 
