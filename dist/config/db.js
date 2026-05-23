@@ -5,15 +5,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
+    throw new Error("❌ MONGO_URI is missing");
+}
+let isConnected = false;
 const connectDB = async () => {
+    if (isConnected)
+        return;
     try {
-        const conn = await mongoose_1.default.connect(process.env.MONGO_URI);
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
+        await mongoose_1.default.connect(MONGO_URI);
+        isConnected = true;
+        console.log("✅ MongoDB Connected");
     }
     catch (error) {
-        console.error("Database connection error:", error);
-        process.exit(1);
+        console.error("❌ MongoDB connection error:", error);
+        throw error;
     }
 };
 exports.connectDB = connectDB;
-exports.default = exports.connectDB;

@@ -16,6 +16,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const CLIENT_ORIGIN = process.env.FRONTEND_URL || "http://localhost:5173";
 
+connectDB().catch((err) => {
+  console.error("MongoDB Error:", err);
+});
+
 app.use(
   cors({
     origin: CLIENT_ORIGIN,
@@ -25,40 +29,31 @@ app.use(
 
 app.use(express.json());
 
-// Connect MongoDB
-connectDB();
-
-// Health check
 app.get("/", (_req: Request, res: Response) => {
   res.json({
     success: true,
-    message: "Lentrail backend is running 🚀",
+    message: "Lentrail backend running 🚀",
   });
 });
 
-// Routes
 app.use("/api", authRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// Error handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
 
   res.status(500).json({
     success: false,
-    message: "Something went wrong",
-    error: err.message,
+    message: err.message,
   });
 });
 
-// Local only
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
 }
 
-// Required for Vercel
 export default app;
