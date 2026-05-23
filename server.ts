@@ -12,9 +12,7 @@ import { connectDB } from "./config/db";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(express.json());
 
 app.use(
@@ -24,24 +22,15 @@ app.use(
   }),
 );
 
-// Routes
+connectDB();
+
+app.get("/", (_req, res) => {
+  res.send("Lentrail Backend API is running");
+});
+
 app.use("/api", authRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// Start Server
-const startServer = async () => {
-  try {
-    await connectDB();
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("❌ Failed to start server:", error);
-    process.exit(1);
-  }
-};
-
-startServer();
+export default app;
